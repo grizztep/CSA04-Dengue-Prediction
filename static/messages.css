@@ -1,0 +1,87 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #edecec;
+    overflow-y: auto;
+    padding-top: 70px; /* Add padding to body to prevent content from hiding behind the fixed header */
+}
+
+.main-content {
+    margin-top: 70px; /* Adjust this to match the header height */
+}
+
+.message-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(28, 87, 48, 0.2); /* Light shadow */
+    overflow-x: auto;
+    width: 100%; /* Set width to 90% of the viewport */
+    margin: 0 auto; /* Center the container horizontally */
+    max-width: 1400px;
+}
+
+#search-bar {
+    width: 98%;
+    padding: 10px;
+    margin-bottom: 20px ;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #1C5730; /* Dark green */
+    color: white;
+}
+
+tr {
+    background-color: #fff; /* Set all rows to white */
+}
+
+tr:hover {
+    background-color: #e0f7e0; /* Light gray for hover effect */
+    cursor: pointer;
+}
+
+.reply-section {
+    margin-top: 20px;
+}
+
+#reply-button {
+    background-color: #1C5730; /* Dark green color */
+    color: white;              /* Text color */
+    border: none;              /* Remove border */
+    padding: 10px 20px;        /* Padding for size */
+    font-size: 16px;           /* Text size */
+    border-radius: 5px;        /* Rounded corners */
+    cursor: not-allowed;       /* Cursor for disabled state */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#reply-button:disabled {
+    background-color: #ccc;    /* Gray color when disabled */
+    cursor: not-allowed;       /* Cursor for disabled state */
+}
+
+#reply-button:not(:disabled) {
+    cursor: pointer;           /* Change cursor when enabled */
+}
+
+#reply-button:hover:not(:disabled) {
+    background-color: #144020; /* Darker shade of green on hover when enabled */
+}

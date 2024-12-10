@@ -1,0 +1,454 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #edecec;
+    overflow-y: auto;
+}
+
+.main-content {
+    margin-top: 70px; /* Adjust this to match the header height */
+}
+
+h1 {
+    text-align: center;
+    margin: 40px 0; /* Increased margin for better separation */
+    font-size: 2.4em; /* Larger font size */
+    color: black; /* Matching color for consistency */
+}
+
+form {
+    max-width: 100%; /* Full width within the container */
+    margin: 0 auto; /* Added vertical margin for better spacing */
+    padding: 30px; /* Increased padding for better form spacing */
+    border: 1px solid #ddd;
+    border-radius: 8px; /* More rounded corners */
+    background-color: #ffffff; /* White background for form */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added subtle shadow */
+}
+
+label {
+    display: block;
+    margin: 15px 0 5px; /* Adjusted margin for better spacing */
+    font-size: 16px; /* Increased font size */
+}
+
+input[type="file"] {
+    display: block;
+    margin: 5px 0 15px;
+}
+
+input[type="submit"] {
+    background-color: #1C5730;
+    color: white;
+    border: none;
+    padding: 12px 20px; /* Larger padding for better button size */
+    cursor: pointer;
+    border-radius: 5px; /* Rounded corners for button */
+    font-size: 16px; /* Increased font size */
+}
+
+input[type="submit"]:hover {
+    background-color: #81A263;
+}
+
+.container {
+    max-width: 1150px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-filter {
+    margin-bottom: 10px;
+}
+
+.table-filter input {
+    padding: 10px;
+    width: 120%;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.table-container {
+    max-height: 700px; /* Limit height and enable scrolling */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead th {
+    background-color: #1C5730;
+    color: white;
+    position: sticky;
+    top: 0;
+    padding: 12px;
+}
+
+tbody td {
+    padding: 12px;
+    text-align: center;
+    color: black;
+    font-size: 1.1em;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Hover effect for table rows */
+tbody tr:hover {
+    background-color: #e0f7e0;
+    cursor: pointer;
+}
+
+
+.flashes {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px auto;
+    max-width: 700px; /* Centered container */
+}
+
+.flashes li {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px; /* Rounded corners for better look */
+}
+
+/* Hide the default file input */
+input[type="file"] {
+    display: none; /* Hide the actual file input */
+}
+
+input[type="submit"] {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    padding: 12px 20px;
+    background-color: #1C5730;
+    color: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    margin-top: 10px;
+}
+
+/* Style for the custom file upload button */
+.file-upload-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 10px 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.file-upload-button {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    background-color: #1C5730;
+    color: #ffffff;
+    border: 2px solid #1C5730;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.file-upload-button:hover {
+    background-color: #81A263;
+    border-color: #81A263;
+}
+
+.file-upload-button:active {
+    background-color: #1C5730;
+    border-color: #1C5730;
+}
+
+/* Icon for the button */
+.file-upload-button::before {
+    content: ''; /* Display icon */
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    background: url('path/to/your-icon.png') no-repeat center center; /* Replace with your icon path */
+    background-size: contain;
+    vertical-align: middle;
+}
+
+.file-upload-container input[type="file"]:checked + .file-upload-button::after {
+    content: 'File Selected'; /* Change button text after file selection */
+}
+
+/* Hide the file input but ensure it is functional */
+.file-upload-container input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.remove-all-button {
+    position: absolute; /* Absolute positioning to align right */
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 12px 20px;
+    background-color: #dc3545;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.remove-all-button:hover {
+    background-color: #c82333;
+}
+
+.info-form-container {
+    max-width: 1000px; /* Set the max-width for the container */
+    margin: 20px auto; /* Center the container */
+    padding: 30px; /* Padding around the container */
+    border: 1px solid #ddd; /* Border around the container */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #ffffff; /* Background color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.info-container {
+    margin-bottom: 20px; /* Space between info and form */
+}
+
+.info-container h2 {
+    margin-bottom: 15px;
+}
+
+.info-container p {
+    margin-bottom: 10px;
+    line-height: 1.5;
+    font-size: 16px;
+}
+
+.info-container ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    line-height: 1.6;
+}
+
+.info-container li {
+    margin-bottom: 5px;
+}
+
+.municipalities-container {
+    margin-bottom: 20px;
+}
+
+.municipalities-container h2 {
+    margin-bottom: 15px;
+}
+
+.municipalities-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, auto);
+    gap: 10px;
+}
+
+.municipality-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.municipality-entry label {
+    margin-right: 10px;
+}
+
+input[type="text"] {
+    width: 100%; /* Full width of the container */
+    padding: 10px; /* Space inside the textbox */
+    margin: 5px 0; /* Space outside the textbox */
+    border: 1px solid #ddd; /* Light border color */
+    border-radius: 4px; /* Slightly rounded corners */
+    font-size: 16px; /* Font size for text inside the textbox */
+    box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+}
+
+input[type="text"]:focus {
+    border-color: #1C5730; /* Border color when textbox is focused */
+    outline: none; /* Removes the default outline */
+    box-shadow: 0 0 5px rgba(28, 87, 48, 0.5); /* Subtle shadow around the textbox */
+}
+
+button {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: #fff;
+    background-color: #1C5730; /* Dark green background */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background-color: #144020; /* Darker green on hover */
+}
+
+button:disabled {
+    background-color: #ccc; /* Gray background for disabled */
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+button:focus {
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 0 2px #144020; /* Add a custom focus outline */
+}
+
+button#saveButton {
+    display: none; /* Initially hidden */
+}
+
+button#updateButton {
+    margin-right: 10px; /* Space between buttons */
+}
+
+.sms-description {
+    font-size: 1.1em;
+    color: black; /* Adjust color to suit your design */
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.loading-popup, .sms-alert-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(255, 255, 255);
+    color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 1001; /* Higher than other content */
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.send-sms-alert-btn {
+    padding: 15px 30px; /* Larger button size */
+    font-size: 18px; /* Bigger font size */
+    color: #fff; /* White text */
+    background-color: #1C5730; /* Green background */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.send-sms-alert-btn:hover {
+    background-color: #144020; /* Darker green on hover */
+}
+
+/* Disable pointer events for the entire body */
+.no-pointer-events {
+    pointer-events: none;
+}
+
+/* Enable pointer events only for the SMS alert button */
+#send-sms-alert-btn {
+    pointer-events: auto; /* Re-enable pointer events for the button */
+}
+
+.map-container {
+    display: flex;
+    justify-content: center; /* Center the map horizontally */
+    margin: 20px; /* Add some space above the map */
+
+}
+#map {
+    height: 400px;
+    width: 100%; /* Full width of its container */
+    max-width: 1300px; /* Optional: Set a maximum width for the map */
+    display: none; /* Initially hide the map */
+}
+
+.color-legend {
+    display: flex;
+    justify-content: center; /* Center the legend horizontally */
+    margin-top: 10px; /* Space between the map and legend */
+    margin-bottom: 30px;
+    flex-wrap: wrap; /* Allow items to wrap if needed */
+}
+
+.legend-item {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    margin: 0 15px; /* Spacing between legend items */
+}
+
+.color-box {
+    width: 20px; /* Width of the color box */
+    height: 20px; /* Height of the color box */
+    margin-right: 5px; /* Space between box and label */
+}
+
+.no-case .color-box {
+    background-color: rgba(128, 128, 128, 0.448); /* Transparent color for no case */
+    border: 1px solid lightgray; /* Optional: Border for visibility */
+}
+
+.low-risk .color-box {
+    background-color: green; /* Low risk color */
+}
+
+.moderate-risk .color-box {
+    background-color: yellow; /* Moderate risk color */
+}
+
+.high-risk .color-box {
+    background-color: orange; /* High risk color */
+}
+
+.severe-risk .color-box {
+    background-color: red; /* Severe/Critical risk color */
+}
+
+/* Responsive styling */
+@media (max-width: 600px) {
+    .file-upload-button {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+    }
+}

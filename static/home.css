@@ -1,0 +1,936 @@
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    box-sizing: border-box;
+    color: #000000; /* Black color for general text */
+    background-color: #ffffff;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden; /* Disable horizontal scrolling */
+    width: 100%;
+}
+
+html {
+    scroll-behavior: smooth; /* Enable smooth scrolling for all links */
+}
+
+.wrapper {
+    flex: 1;
+}
+
+header {
+    background-color: #1C5730;
+    color: #ffffff;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.container-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1090px;
+}
+
+.navigation {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.logo-text {
+    display: flex;
+    align-items: center;
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.pho-logo,
+.pho-label,
+.pho-label h2,
+.pho-label h4 {
+    cursor: pointer; /* Change cursor to pointer on hover for individual elements */
+}
+
+.pho-logo {
+    width: 80px;
+    height: 80px;
+    padding-right: 10px;
+}
+
+.pho-label {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.pho-label h2 {
+    margin: 0;
+}
+
+.pho-label h4 {
+    font-weight: lighter;
+    margin: 0;
+}
+
+.menu-toggle {
+    display: none;
+    cursor: pointer;
+}
+
+.menu {
+    text-align: right;
+    font-size: 14px;
+}
+
+.menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap; /* Allow menu items to wrap on smaller screens */
+}
+
+.menu ul li {
+    position: relative; /* Allow positioning of the pseudo-element */
+    margin: 0 10px; /* Reduce margin if needed */
+}
+
+.menu ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    position: relative; /* Position relative to allow absolute positioning of the underline */
+    display: block; /* Make the link block-level to encompass padding and hover area */
+    padding: 5px 0; /* Add padding to make space for the underline */
+}
+
+.menu ul li a:hover {
+    color: #81A263; /* Color change on hover */
+}
+
+.menu ul li a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0; /* Align the underline to the bottom of the link */
+    width: 100%;
+    height: 2px; /* Underline height */
+    background-color: #81A263; /* Underline color */
+    transform: scaleX(0); /* Initially hide the underline */
+    transform-origin: bottom right; /* Scale the underline from the right */
+    transition: transform 0.3s ease; /* Smooth transition for the underline effect */
+}
+
+.menu ul li a:hover::after {
+    transform: scaleX(1); /* Show the underline when the link is hovered */
+}
+
+.menu ul li a.login-button {
+    border: 2px solid #ffffff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.menu ul li a.login-button:hover {
+    background-color: #ffffff;
+    color: #1C5730;
+}
+
+.container {
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.introduction, section {
+    font-size: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+footer {
+    background-color: #1C5730;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    width: 100%;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin-top: 10px;
+}
+
+form input {
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #1C5730;
+    border-radius: 5px;
+}
+
+form button {
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #1C5730;
+    color: #ffffff;
+}
+
+form button:hover {
+    background-color: #145022;
+}
+
+.scroll-to-top-btn {
+    display: none;
+    position: fixed;
+    margin: 10px;
+    bottom: 20px;
+    right: 20px;
+    background-color: #1C5730;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.scroll-to-top-btn i {
+    margin-top: 10px; /* Adjust vertical alignment */
+}
+
+.scroll-to-top-btn:hover {
+    background-color: #ffffff;
+    color: #1C5730;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    position: fixed;
+    top: 20px;
+    right: -300px; /* Off the screen initially */
+    width: 200px;
+    height: 100%;
+    background-color: #1C5730;
+    color: #ffffff;
+    transition: right 0.3s ease; 
+    z-index: 1000;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow-y: auto; /* Enable vertical scrolling */
+    overscroll-behavior-y: contain; /* Prevent parent scrolling when reaching top or bottom */
+}
+
+.sidebar.active {
+    right: 0;
+}
+
+.sidebar .menu-toggle {
+    display: block;
+    cursor: pointer;
+    padding: 20px;
+    color: #ffffff;
+}
+
+.sidebar-menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar-menu ul li {
+    margin: 10px 0;
+    padding-top: 13px;
+}
+
+.sidebar-menu ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 900px;
+}
+
+/* Add underline after each section */
+.container section {
+    padding-bottom: 20px; /* Adjust padding as needed */
+    margin-bottom: 20px; /* Adjust margin as needed */
+}
+
+.container section ul {
+    list-style-type: disc; /* Use bullets for unordered lists */
+}
+
+/* Municipalities Grid Section */
+.municipalities-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.municipality {
+    text-align: center;
+}
+
+.municipality img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect on images */
+.municipality img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.municipality a {
+    display: block;
+    margin-top: 10px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+/* Underline effect on hover */
+.municipality a:hover {
+    text-decoration: underline;
+    color: #144020;
+}
+
+#contact {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#contact h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#contact p {
+    font-size: 16px;
+    color: #333;
+}
+
+#contact-form {
+    margin-top: 20px;
+}
+
+#contact-form label {
+    display: block;
+    font-size: 16px;
+    color: #144020;
+    margin-bottom: 5px;
+}
+
+#contact-form input,
+#contact-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    resize: none;
+}
+
+#contact-form button {
+    padding: 10px 20px;
+    background-color: #1C5730;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#contact-form button:hover {
+    background-color: #144020;
+}
+
+#feedback {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#feedback h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#feedback p {
+    font-size: 16px;
+    color: #333;
+}
+
+#feedback-form {
+    margin-top: 20px;
+}
+
+#feedback-form label {
+    display: block;
+    font-size: 16px;
+    color: #144020;
+    margin-bottom: 5px;
+}
+
+#feedback-form input,
+#feedback-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    resize: none;
+}
+
+#feedback-form button {
+    padding: 10px 20px;
+    background-color: #1C5730;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#feedback-form button:hover {
+    background-color: #144020;
+}
+
+/* Title Container Styling */
+.title-container {
+    position: relative;
+    width: 100%;
+    height: 170px; /* Adjust height as needed */
+    overflow: hidden;
+}
+
+.title-background h1, .title-background h3 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Black shadow with opacity for better readability */
+}
+
+.title-background {
+    position: relative; /* Change from absolute to relative for proper stacking */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff; /* Text color */
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.title-background::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(../static/img/bg.jpg); /* Ensure the URL is correct */
+    background-size: cover;
+    background-position: center;
+    opacity: 0.6; /* Adjust opacity as needed (0 = fully transparent, 1 = fully opaque) */
+    z-index: -1; /* Place the background behind the text */
+}
+
+.title-background h1 {
+    font-size: 3rem; /* Adjust font size as needed */
+    margin: 0;
+    padding: 0;
+}
+
+.title-background h3 {
+    font-size: 1.5rem; /* Adjust font size as needed */
+    margin: 0;
+    padding: 0;
+}
+
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal content */
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px; 
+    box-shadow: 0px 4px 8px rgba(28, 87, 48, 0.6); /* #1C5730 shadow */
+    text-align: center;
+    position: relative;
+}
+
+/* Close button */
+.close-feedback,
+.close-message {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.close-feedback:hover,
+.close-feedback:focus,
+.close-message:hover,
+.close-message:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Container Styles */
+#dengue-info {
+    padding: 20px;
+    background-color: #f5f5f5; /* Light gray background for contrast */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Subheading Styles */
+#dengue-info h3 {
+    font-size: 1.75rem;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* Minor Header Styles */
+#dengue-info h5 {
+    font-size: smaller;
+    margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+/* Paragraph Styles */
+#dengue-info p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333; /* Darker text color for better readability */
+    margin-bottom: 15px;
+}
+
+/* List Styles */
+#dengue-info ul {
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
+
+#dengue-info li {
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+/* Reference List Styles */
+#dengue-info ol {
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
+
+.prevention-container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Adjust space between image and text */
+    margin: 20px 0; /* Adjust vertical margin */
+}
+
+.prevention-image img {
+    width: 100%;
+    max-width: 400px; /* Adjust based on your design */
+    height: auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+    border-radius: 8px;
+    margin-right: 10px;
+}
+
+.prevention-image img:hover {
+    transform: scale(1.1); /* Zoom effect on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow effect */
+}
+
+.prevention-text {
+    flex: 1; /* Allows the text to take the remaining space */
+}
+
+.transmission-image {
+    width: 100%;
+    max-width: 750px; /* Adjust based on your design */
+    height: auto;
+    display: block;
+    margin: 0 auto; /* Center the image horizontally */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.transmission-image:hover {
+    transform: scale(1.05); /* Zoom effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow effect */
+}
+
+.symptoms-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.symptoms-text {
+    flex: 1;
+    margin-right: 20px; /* Space between text and image */
+}
+
+.symptoms-image {
+    flex: 1;
+    display: flex;
+    justify-content: center; /* Center image horizontally */
+}
+
+.symptoms-image img {
+    width: 100%;
+    max-width: 450px; /* Adjust this value as needed */
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+    border-radius: 8px;
+}
+
+.symptoms-image img:hover {
+    transform: scale(1.05); /* Zoom effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+}
+
+/* Responsive Styles */
+@media (max-width: 426px) {
+    body{
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    .sidebar {
+        position: fixed;
+        padding-top: 10px;
+        width: 125px;
+        right: -300%; /* Hide sidebar off screen */
+        top: 0;
+        bottom: 0;
+        transition: right 0.3s ease;
+        overflow-x: hidden;
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+    .sidebar.active {
+        right: 0;
+    }
+
+    .menu ul li {
+        margin: 0; /* Remove margin for small screens */
+    }
+
+    .menu ul {
+        display: none;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    header{
+        width: 100%;
+        display: flex;
+        background-color: #1C5730;
+        color: #ffffff;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box; /* Include padding in the width calculation */
+    }
+
+    .scroll-to-top-btn {
+        position: fixed;
+        margin: 35px;
+    }
+
+    .symptoms-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .symptoms-text {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .symptoms-image img {
+        max-width: 100%;
+    }
+
+    .prevention-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .prevention-text {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .prevention-image img {
+        max-width: 100%;
+    }
+    
+    .container-header {
+        width: 100%;
+        font-size: smaller;
+    }
+
+    .municipalities-grid{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    footer{
+        padding: inherit;
+        position: relative;
+        width: 100%;
+    }
+
+    #feedback-form input,
+    #feedback-form textarea {
+        padding: 2px;
+        font-size: medium;
+        resize: none;
+    }
+
+    #contact-form input,
+    #contact-form textarea {
+        padding: 2px;
+        font-size: medium;
+        resize: none;
+    }
+
+    .title-background h1{
+        margin: 0;
+        padding: 0;
+        font-size: xx-large;
+    }
+
+    .title-background h3{
+        margin: 0;
+        padding: 0;
+    }
+
+    .title-background{
+        position: relative;
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: aliceblue;
+    }
+
+    .title-container{
+        overflow: hidden;
+        height: 120px;
+        width: 100%;
+    }
+
+    .pho-logo{
+        width: 60px;
+        height: 60px;
+    }
+
+    .pho-label{
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .container{
+        margin: 0;
+    }
+
+    .navigation {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: x-small;
+    }
+}
+
+@media (max-width: 960px) {
+    body{
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    .sidebar {
+        position: fixed;
+        padding-top: 10px;
+        width: 125px;
+        right: -300%; /* Hide sidebar off screen */
+        top: 0;
+        bottom: 0;
+        transition: right 0.3s ease;
+        overflow-x: hidden;
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+    .sidebar.active {
+        right: 0;
+    }
+
+    .menu ul li {
+        margin: 0; /* Remove margin for small screens */
+    }
+
+    .menu ul {
+        display: none;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    header{
+        width: 100%;
+        display: flex;
+        background-color: #1C5730;
+        color: #ffffff;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box; /* Include padding in the width calculation */
+    }
+
+    .scroll-to-top-btn {
+        position: fixed;
+        margin: 35px;
+    }
+
+    .title-background h1{
+        margin: 0;
+        padding: 0;
+        font-size: xx-large;
+    }
+
+    .title-background h3{
+        margin: 0;
+        padding: 0;
+    }
+
+    .title-background{
+        position: relative;
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: aliceblue;
+    }
+
+    .title-container{
+        overflow: hidden;
+        height: 120px;
+        width: 100%;
+    }
+
+    footer{
+        padding: inherit;
+        position: relative;
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 1440px) {
+    body{
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    header{
+        width: 100%;
+        display: flex;
+        background-color: #1C5730;
+        color: #ffffff;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box; /* Include padding in the width calculation */
+    }
+
+    .title-background h1{
+        margin: 0;
+        padding: 0;
+        font-size: xx-large;
+    }
+
+    .title-background h3{
+        margin: 0;
+        padding: 0;
+    }
+
+    .title-background{
+        position: relative;
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: aliceblue;
+    }
+
+    .title-container{
+        overflow: hidden;
+        height: 120px;
+        width: 100%;
+    }
+
+    footer{
+        padding: inherit;
+        position: relative;
+        width: 100%;
+    }
+
+}

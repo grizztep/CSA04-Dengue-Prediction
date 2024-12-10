@@ -1,0 +1,139 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #edecec;
+    overflow-y: auto; 
+}
+
+.logo-text {
+    display: flex;
+    align-items: center;
+}
+
+.pho-logo {
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+    margin-top: 6px;
+}
+
+.pho-label-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center; 
+}
+
+.pho-label-login h2 {
+    margin: 0;
+    color: #1C5730;
+    font-weight: 600;
+}
+
+.pho-label-login h4 {
+    font-weight: normal;
+    margin: 0;
+}
+
+.pho-label-login h2 a,
+.pho-label-login h4 a,
+.pho-link {
+    color: #1C5730;
+    text-decoration: none;
+}
+
+.pho-label-login h2 a:hover,
+.pho-label-login h4 a:hover,
+.pho-link:hover {
+    text-decoration: none;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 100px); /* Adjust based on header height */
+}
+
+.login-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #1c57304c;
+    width: 300px;
+    text-align: center;
+}
+
+main {
+    padding: 20px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #1C5730; /* Adjusted color */
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.forgot-password {
+    margin-bottom: 15px;
+}
+
+.forgot-password a {
+    color: #aaa;
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+button[type="submit"] {
+    background-color: #1C5730; /* Adjusted color */
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #144020; /* Darker shade for hover */
+}
+
+.flash-messages {
+    color: rgb(196, 0, 0);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 740px) {
+    .container-header {
+        padding: 10px;
+    }
+
+    .logo-text {
+        align-items: center;
+        text-align: center;
+    }
+
+    .pho-logo {
+        margin-bottom: 10px; 
+    }
+
+    .login-container {
+        width: 90%; 
+        max-width: 350px; 
+    }
+}
