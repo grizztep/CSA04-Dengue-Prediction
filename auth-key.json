@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "dengue-prediction-d862e",
+  "private_key_id": "ff2a159ce7309e46f3d5add8ba0b3c465b2fdaaa",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDM4NmT7UKUNdne\nm5zgq/8YgZosi1HfXNrIAzFt84mggdX4FDw8LaOPw9quUYsBZPThLgD/dpF6Ilix\nIbH+Ro7PQPgTnCWWnmv6Q8qDBfn8nAZoRtD0CWD9p500svcY5B5zA1B6SuR/7o/5\niJ7LzN+MB2TNAEKac8ijBgYkikIwwGB0oYU8xVSWiRDeDs8wF5AcjFLvXwcTk03l\nVW/ShhY7mYM5QMklK8bylUT0EEV517HgckqL9F7LyUZonKjtuUrR6KUa0xhaYLBQ\nwWbA+R1k4M+Hroaeycas3q1KywHOuPQw6/0abDJC8vmY69v/KVzKY8hQgeUhzZtN\n0ocU+TT5AgMBAAECggEAHBSjbbWCvxqkanDsrxST6bF1xq4vwgwRhoF9iGLtVZ0G\nDTME0IC23tEKy4KsqTvDnot2Io2HQfSsMFb8dOwJzdlLRzDLLBo5lXsuKggrK9bc\nv/UY1aHlc87B6sOuv3AgxkXJhYF3URuLCzoQ/cDuUNyAkeJ7vnypHsMIG4EBsnmk\nzb0ss2ZAxdyyJYcBkQ4+0sM5RMZ/SZZ1Z9+b51y4HyReCeDkHmaMa5BOjcxbrQQ3\nS30Z2nAzbzx19qCa6SeRGHNmyvVWyg6zprv3rKyYp6OOhu8pZM1w3QlDp3AtUXQ0\ne/3BuK42Y0If5a4KKhWzgXa/qU2PU+grNZRAfyj0awKBgQDtEF5CJ6H963ljGO3P\n4c0YAjPfaMtMOmP1eyQ1CR5jB12ydVluVc2LuVTarKzfwBivGULqFJREp2DxBQNk\n30eASe088Iv3LbwULMr51jHTwmIV4MLhdYn1+jQfCfeB2jeAIOFuswiarOs89M3a\ntQekbAaj0ry4WGlZps3tz4WuQwKBgQDdPlR97sOo28hbjkpymaoEtO1rTbKxdIt/\n9pFk/vBFlVGZNkaSpa6pvi7I3e1Su+alMWSMPbCswvSME+k/5vyxPK99ljeiAs4z\nE9tWxMfKj7jJ9+0L6xwr4kWIUcnUwLE4jKLA8z1fMy2YMgFskuGmYWf0ZXQadlQx\nh1dqymBCEwKBgQCdwIWo6iy/BuJJEn62FiFft5+DLH4UZMq9wUsPy9ift3gfWD3B\n0XEtaI/R0JRddLw4UMwZbsZXhTZaTKa8imRPN2KaacwKGTIODtynMmUH8FNLEb09\nQPUkbXIfsYc1rtu99KNvAc5Y93a2ooUV49+JB6XHgGW7GoJIeVqRxMXFdwKBgGTm\npWAdwYxEWDcxSNDFNh4ZaeIzOFjoPyroB91Yy7ngZKuMblk5SNRPUUT4ueCuo30Z\nbrLq+6V+8ErmVc14CizG8X5EQTEZOHNhDfqfmkLOk0dBVBHIczusYWvPaU4nZ2vT\n7/IxvP6q95Ne0vlyb4kTCXcTwgTDjJheEkc47veTAoGAC1sfgH5CF2O0/GyU0dNZ\nuVYfs5MUnwWQ/h4dzrHVl6JToO6I9sJOrNUWw7BQ0v2TRvZTkt6OwNjksR9gGB2s\nGHhUIF37gAqKxj9XHGrmQn3AuBSquge5VAOGp0hvuRUATRITeMfMmOC4Dr7k7fRj\ngLgvMa8AsRfqxqeDoxkHYLc=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-8gr84@dengue-prediction-d862e.iam.gserviceaccount.com",
+  "client_id": "107921726136757599437",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-8gr84%40dengue-prediction-d862e.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
