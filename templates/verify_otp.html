@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Provincial Laguna OTP</title>
+    <link rel="stylesheet" href="/static/form.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .success-message {
+            color: green;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+    <div class="main-content">
+        <div class="login-container">
+            <a href="/" class="pho-link">
+                <img src="{{ url_for('static', filename='img/PHO-logo.png') }}" alt="Provincial Health Office Logo" class="pho-logo">
+                <div class="pho-label-login">
+                    <h2><a href="/">Provincial Health Office</a></h2>
+                    <h4><a href="/">Santa Cruz Laguna</a></h4>
+                </div>
+            </a>
+            <main>
+                <h2>Verify OTP</h2>
+                <!-- Display error or success message -->
+                {% if error %}
+                    <div class="error-message">{{ error }}</div>
+                {% elif success %}
+                    <div class="success-message">{{ success }}</div>
+                {% endif %}
+                <form action="/verify_otp" method="post">
+                    <div class="form-group">
+                        <input type="text" id="otp" name="otp" placeholder="Enter OTP" required aria-label="One Time Password">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+                <p>
+                    <a href="/forgotpass">Back</a>
+                </p>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

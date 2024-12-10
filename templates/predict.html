@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='predict.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <title>Predict Dengue Outbreak</title>
+</head>
+{% include 'header.html' %}
+<body>
+    <div class="main-content">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <div class="info-form-container">
+            <div class="municipalities-container">
+                <h2>Municipalities and Contact Numbers</h2>
+                <p>
+                    After generating predictions, send SMS alerts to the contact numbers listed in the prediction results.
+                    If any contact numbers have changed, you can update them here. Ensure all numbers are up-to-date for effective notifications.
+                </p>
+                <button id="update-btn" class="btn">Update</button>
+                <button id="save-btn" class="btn" disabled>Save</button>
+                <div class="municipalities-grid">
+                    <div class="municipality-entry">
+                        <label for="contact-famy">Famy</label>
+                        <input type="text" id="contact-famy" name="contact-famy" placeholder="Enter contact number" disabled pattern="[0-9+()\-\s]*" oninput="validateInput(this)">
+                    </div>
+                    <div class="municipality-entry">
+                        <label for="contact-kalayaan">Kalayaan</label>
+                        <input type="text" id="contact-kalayaan" name="contact-kalayaan" placeholder="Enter contact number" disabled pattern="[0-9+()\-\s]*" oninput="validateInput(this)">
+                    </div>
+                    <div class="municipality-entry">
+                        <label for="contact-mabitac">Mabitac</label>
+                        <input type="text" id="contact-mabitac" name="contact-mabitac" placeholder="Enter contact number" disabled pattern="[0-9+()\-\s]*" oninput="validateInput(this)">
+                    </div>
+                    <div class="municipality-entry">
+                        <label for="contact-paete">Paete</label>
+                        <input type="text" id="contact-paete" name="contact-paete" placeholder="Enter contact number" disabled pattern="[0-9+()\-\s]*" oninput="validateInput(this)">
+                    </div>
+                    <div class="municipality-entry">
+                        <label for="contact-pakil">Pakil</label>
+                        <input type="text" id="contact-pakil" name="contact-pakil" placeholder="Enter contact number" disabled pattern="[0-9+()\-\s]*" oninput="validateInput(this)">
+                    </div>
+                    <div class="municipality-entry">
+                        <label for="contact-pangil">Pangil</label>
+                        <input type="text" id="contact-pangil" name="contact-pangil" placeholder="Enter contact number" disabled pattern="[0-9+()\-\s]*" oninput="validateInput(this)">
+                    </div>
+                    <div class="municipality-entry">
+                        <label for="contact-santa-maria">Santa Maria</label>
+                        <input type="text" id="contact-santa-maria" name="contact-santa-maria" placeholder="Enter contact number" disabled pattern="[0-9+()\-\s]*" oninput="validateInput(this)">
+                    </div>
+                    <div class="municipality-entry">
+                        <label for="contact-siniloan">Siniloan</label>
+                        <input type="text" id="contact-siniloan" name="contact-siniloan" placeholder="Enter contact number" disabled pattern="[0-9+()\-\s]*" oninput="validateInput(this)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-container">
+                <h2>Data Requirements for Prediction</h2>
+                <p>Please ensure that your files meet the following requirements:</p>
+                <ul>
+                    <li>
+                        Accepted formats: csv files <strong>(.csv)</strong> or excel files <strong>(.xlsx)</strong> only.
+                    </li>
+                    <li>
+                        Upload all available dengue case data across multiple years to enhance the accuracy of the prediction results.
+                    </li>
+                    <li>
+                        Weather Dataset: Should include columns <strong>'WD2M' (Wind Direction at 2 Meters)</strong>,
+                        <strong>QV2M (Specific Humidity at 2 Meters) </strong>, <strong>RH2M (Relative Humidity at 2 Meters)</strong>,
+                        <strong>T2M_MAX (Temperature at 2 Meters Maximum)</strong>, and <strong>Municipality</strong>.
+                    <li>
+                        For more accurate predictions, download the required weather dataset from 
+                        <a href="https://power.larc.nasa.gov/data-access-viewer/" style="font-style: italic; color: blue;">
+                        NASA’s data access viewer</a>, demographic data, gender group, and age group on
+                        <a href="https://www.philatlas.com/" style="font-style: italic; color: blue;">philatlas</a>.
+                    </li>
+                    <li>
+                        Retrieve the coordinates for each municipality on <a href="https://www.google.com/maps" style="font-style: italic; color: blue;">Google Maps</a>,
+                        then complete the required information for the weather dataset. You can download the data in either XLSX or CSV format.
+                    </li>
+                    <li>
+                        Merge the weather dataset and rename the downloaded file with the corresponding municipality's name. Then, create a column named 
+                        <strong>Municipality</strong> and populate it with the respective municipality names.
+                    </li>
+                    <li>
+                        Dengue Cases Dataset: Should include columns <strong>'Muncity'</strong>, <strong>DateOfEntry</strong>, 
+                        <strong>LabRes</strong>, <strong>MorbidityMonth</strong>, <strong>MorbidityWeek</strong>,
+                        <strong>'MuncityOfDRU' </strong>, <strong>'Barangay'</strong>, <strong>'OnsetToAdmit'</strong>,  
+                        <strong>'LabTest'</strong>, <strong>'AdmitToEntry'</strong>, and <strong>'Year'</strong>.
+                    </li>
+                    <li>
+                        Please upload the most recent dengue case data, as predictions for the next year and next month will be based on the uploaded data.
+                    </li>
+                </ul>
+            </div>
+
+            <form action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data">
+                <div class="file-upload-container">
+                    <input type="file" name="file1" id="file1" accept=".csv, .xlsx">
+                    <label for="file1" class="file-upload-button">Upload Weather Data</label>
+                </div>
+                <div class="file-upload-container">
+                    <input type="file" name="file2" id="file2" accept=".csv, .xlsx">
+                    <label for="file2" class="file-upload-button">Upload Dengue Cases Data</label>
+                </div>
+                <div class="file-upload-container">
+                    <input type="file" name="file3" id="file3" accept=".csv, .xlsx">
+                    <label for="file3" class="file-upload-button">Upload Demographic Data</label>
+                </div>
+                <div class="file-upload-container">
+                    <input type="file" name="file4" id="file4" accept=".csv, .xlsx">
+                    <label for="file4" class="file-upload-button">Upload Age Group Data</label>
+                </div>
+                <div class="file-upload-container">
+                    <input type="file" name="file5" id="file5" accept=".csv, .xlsx">
+                    <label for="file5" class="file-upload-button">Upload Gender Group Data</label>
+                </div>
+                <div class="file-upload-container">
+                    <input type="file" name="file6" id="file6" accept=".csv, .xlsx">
+                    <label for="file6" class="file-upload-button">Upload Survey Data</label>
+                </div>
+                <br>
+                <input type="submit" value="Upload and Predict">
+                <div id="loading-popup" class="loading-popup">
+                    <h2>Loading...</h2>
+                    <p>Please wait while we fetch the prediction results.</p>
+                </div>
+            </form>
+            
+            <div id="sms-alert-popup" class="sms-alert-popup hidden">
+                <h2>SMS Alert Ready</h2>
+                <p>Click the button below to send SMS alerts to the municipalities listed in the results.</p>
+                <div id="countdown-timer">Closing in <span id="countdown">10</span> seconds</div>
+                <button id="send-sms-alert-btn" class="send-sms-alert-btn">Send SMS Alert</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <h1>Dengue Prediction Results</h1>
+            <p class="sms-description">
+                <strong>Please read the instructions carefully before sending an SMS alert.</strong>
+                <ul>
+                    <li>After a successful prediction, a popup message will notify you about sending SMS alerts to the municipalities 
+                        listed in the results. This message will automatically close after 10 seconds if no action is taken.
+                    </li>
+                    <li>
+                        You can filter the table for a specific previous month by typing the month's name into the search bar.
+                    </li>
+                </ul>
+            </p>
+            <div class="table-filter">
+                <input type="text" id="search" placeholder="Search...">
+            </div>
+        
+            <div class="table-container">
+                <table id="results">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Municipality</th>
+                            <th>Barangay</th>
+                            <th>Predicted Cases</th>
+                            <th>Risk Level</th>
+                            <th>Area Classification</th>
+                            <th>Temperature</th>
+                            <th>Precipitation</th>
+                            <th>Wind Speed</th>
+                            <th>Humidiy</th>
+                            <th>Population (2020)</th>
+                            <th>Average Household Size</th>
+                            <th>Age Group</th>
+                            <th>Gender Group</th>
+                            <th>Source of Water Supply</th>
+                            <th>Living Conditions</th>
+                            <th>Mosquito Control Measures</th>
+                            <th>Access to Local Health Facilities</th>
+                            <th>Time Spent Outdoors</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prediction in predictions %}
+                            <tr>
+                                <td class="row-id">{{ loop.index }}</td>
+                                <td>{{ prediction.datemonthyear }}</td>
+                                <td>{{ prediction.muncity }}</td>
+                                <td>{{ prediction.barangay }}</td>
+                                <td>{{ prediction.Predicted_Cases }}</td>
+                                <td>{{ prediction.Risk_Level }}</td>
+                                <td>{{ prediction.classification }}</td>
+                                <td>{{ prediction.t2m_max }}</td>
+                                <td>{{ prediction.prectotcorr }}</td>
+                                <td>{{ prediction.ws2m_max }}</td>
+                                <td>{{ prediction.rh2m }}</td>
+                                <td>{{ prediction.population_2020 }}</td> <!-- Renamed -->
+                                <td>{{ prediction.average_household_size }}</td> <!-- Renamed -->
+                                <td>{{ prediction.agegroup }}</td>
+                                <td>{{ prediction.gender }}</td>
+                                <td>{{ prediction.source_of_water_supply }}</td>
+                                <td>{{ prediction.living_conditions }}</td>
+                                <td>{{ prediction.mosquito_control_measures }}</td>
+                                <td>{{ prediction.access_to_local_health_facilities }}</td>
+                                <td>{{ prediction.time_spent_outdoors }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- Print Button -->
+            <div class="print-container">
+                <button id="print-button" class="print-btn">Print Result</button>
+            </div>
+            <!-- Description of Risk Level Identification -->
+            <div class="risk-level-description">
+                <h3>Description of Risk Level Identification</h3>
+                <p>
+                    The risk level for each barangay is determined through a comprehensive assessment of various predictive attributes, each contributing to the overall risk assessment as follows:
+                </p>
+                <ul>
+                    <li>
+                        <strong>Predicted Cases:</strong> The primary factor in risk identification. A higher number of predicted cases correlates with a greater risk level:
+                        <ul>
+                            <li>0-1 cases: No Risk</li>
+                            <li>1-2 cases: Low Risk</li>
+                            <li>3-5 cases: Moderate Risk</li>
+                            <li>6-7 cases: High Risk</li>
+                            <li>8+ cases: Severe/Critical Risk</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Maximum Temperature:</strong> Represents the maximum daily temperature; higher temperatures can significantly increase the risk of dengue transmission:
+                        <ul>
+                            <li>Below 25°C: Low Risk</li>
+                            <li>25-30°C: Moderate Risk</li>
+                            <li>30-35°C: High Risk</li>
+                            <li>Above 35°C: Severe/Critical Risk</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Precipitation:</strong> Total precipitation is evaluated, as excessive rain can create breeding grounds for mosquitoes:
+                        <ul>
+                            <li>0-2 mm: Low Risk</li>
+                            <li>2-10 mm: Moderate Risk</li>
+                            <li>10+ mm: High Risk</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Wind Speed:</strong> Wind speed can influence mosquito populations. Low wind speeds can contribute to higher mosquito activity:
+                        <ul>
+                            <li>0-1 m/s: High Risk</li>
+                            <li>1-2 m/s: Moderate Risk</li>
+                            <li>2+ m/s: Low Risk</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Relative Humidity:</strong> Relative humidity levels that support mosquito survival and breeding:
+                        <ul>
+                            <li>Below 60%: Low Risk</li>
+                            <li>60-75%: Moderate Risk</li>
+                            <li>Above 75%: High Risk</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Demographic Factors:</strong> Population density and average household size are also considered, as these factors can exacerbate the spread of dengue:
+                        <ul>
+                            <li>Lower population density: Lower Risk</li>
+                            <li>Higher population density: Higher Risk</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Average Household Size:</strong> 
+                        <ul>
+                            <li>Average household size of 3 or fewer members: <em>Low Risk</em></li>
+                            <li>Average household size of 4 members: <em>Moderate Risk</em></li>
+                            <li>Average household size of 5 members: <em>High Risk</em></li>
+                            <li>Average household size of 6 or more members: <em>Severe/Critical Risk</em></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Age Group:</strong> The risk of contracting dengue varies across different age groups due to factors like immune system strength, exposure, and underlying health conditions:
+                        <ul>
+                            <li>Age group 0-9 or 70 and above: <em>Severe/Critical Risk</em></li>
+                            <li>Age group 10-19 or 60-69: <em>High Risk</em></li>
+                            <li>Age group 20-39: <em>Moderate Risk</em></li>
+                            <li>Age group 40-59: <em>Low Risk</em></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Gender:</strong> While both genders can contract dengue, related studies have shown that:
+                        <ul>
+                            <li>Female: Moderate Risk – Due to factors such as potential for higher exposure or health-related vulnerabilities.</li>
+                            <li>Male: Low Risk – Typically experiences lower associated risk unless otherwise affected by specific factors.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Area Classification (Rural/Urban):</strong> The classification of a municipality as rural or urban affects the risk level due to environmental and population factors:
+                        <ul>
+                            <li>Urban Areas: High Risk – Due to increased population density, limited green spaces, and common breeding sites such as stagnant water in buildings and containers.</li>
+                            <li>Rural Areas: Moderate Risk – Typically lower population density, but natural bodies of water and agricultural activities can create breeding sites.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>
+                    After evaluating all relevant attributes, the final risk level for each barangay is calculated as the average of the scores from each contributing factor. This composite score helps prioritize interventions and resource allocation for dengue prevention.
+                </p>
+            </div>
+        </div>
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+        <div class="color-legend">
+            <div class="legend-item no-case">
+                <span class="color-box"></span>
+                <span>No Case</span>
+            </div>
+            <div class="legend-item low-risk">
+                <span class="color-box"></span>
+                <span>Low Risk</span>
+            </div>
+            <div class="legend-item moderate-risk">
+                <span class="color-box"></span>
+                <span>Moderate Risk</span>
+            </div>
+            <div class="legend-item high-risk">
+                <span class="color-box"></span>
+                <span>High Risk</span>
+            </div>
+            <div class="legend-item severe-risk">
+                <span class="color-box"></span>
+                <span>Severe/Critical Risk</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        function validateInput(input) {
+            const validPattern = /^[0-9+()\-\s]*$/; // Pattern for numbers and specific special characters
+
+            // Check if the input value matches the pattern
+            if (!validPattern.test(input.value)) {
+                // Remove the last character if it's invalid
+                input.value = input.value.slice(0, -1);
+            }
+
+            // Limit input to a maximum of 13 characters
+            if (input.value.length > 13) {
+                input.value = input.value.slice(0, 13); // Truncate the input to 13 characters
+            }
+        }
+
+        var map;
+        var geojsonLayer; // Variable to hold GeoJSON layer
+
+        // Function to check if the table is populated
+        function checkTableAndToggleMap() {
+            var tableBody = document.querySelector('#results tbody');
+            var mapContainer = document.getElementById('map');
+
+            // Check if there are any rows in the table body
+            if (tableBody.rows.length > 0) {
+                mapContainer.style.display = 'block'; // Show the map
+                initializeMap(); // Initialize the map
+                loadGeoJSON(); // Load GeoJSON data
+            } else {
+                mapContainer.style.display = 'none'; // Hide the map
+            }
+        }
+
+        // Function to initialize the map
+        function initializeMap() {
+            map = L.map('map').setView([14.6042, 121.0244], 10);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+        }
+
+        // Function to load GeoJSON data
+        function loadGeoJSON() {
+            fetch('{{ url_for("static", filename="maps_data.geojson") }}')
+                .then(response => response.json())
+                .then(data => {
+                    geojsonLayer = L.geoJSON(data).addTo(map);
+                    highlightBarangays(data); // Highlight only barangays from the filtered municipalities
+                })
+                .catch(error => console.error('Error loading GeoJSON:', error));
+        }
+
+        // Highlight the barangays based on the visible municipalities in the table
+        // Highlight the barangays based on the visible municipalities in the table
+        function highlightBarangays(data) {
+            var tableBody = document.querySelector('#results tbody');
+            var barangayData = {}; // Object to hold barangay names and their risk levels
+
+            // Loop through each visible row in the table and gather barangay names and risk levels
+            Array.from(tableBody.rows).forEach(row => {
+                if (row.style.display !== 'none') {
+                    var barangay = row.cells[3].textContent.trim().toLowerCase().replace(/\s+/g, ''); // Remove spaces
+                    var municipality = row.cells[2].textContent.trim().toLowerCase().replace(/\s+/g, ''); // Remove spaces
+                    var riskLevel = row.cells[5].textContent.trim(); // Get the risk level text
+
+                    // Store risk level for each visible barangay
+                    barangayData[barangay] = {
+                        municipality: municipality,
+                        riskLevel: riskLevel
+                    };
+                }
+            });
+
+            // Clear previous highlights (if any)
+            if (geojsonLayer) {
+                map.removeLayer(geojsonLayer);
+            }
+
+            // Define the municipalities that should have gray highlighting
+            var grayHighlightMunicipalities = ['santamaria', 'famy', 'kalayaan', 'siniloan', 'paete', 'pakil', 'pangil', 'mabitac'];
+
+            // Loop through the GeoJSON features
+            data.features.forEach(feature => {
+                var barangayName = feature.properties.NAME_3.toLowerCase().replace(/\s+/g, ''); // Get barangay name from GeoJSON and remove spaces
+                var municipalityName = feature.properties.NAME_2.toLowerCase().replace(/\s+/g, ''); // Get municipality name from GeoJSON
+                var provinceName = feature.properties.NAME_1; // Get province name from GeoJSON
+
+                // Check if the barangay is visible in the table and belongs to the correct province and municipality
+                if (barangayData[barangayName] && barangayData[barangayName].municipality === municipalityName && provinceName === "Laguna") {
+                    var riskLevel = barangayData[barangayName].riskLevel;
+
+                    // Define the highlight style based on the risk level
+                    var style = {
+                        color: '',
+                        weight: 3,
+                        fillOpacity: 0.5,
+                    };
+
+                    // Set colors based on the risk level text
+                    switch (riskLevel) {
+                        case 'No Risk':
+                            style.color = 'transparent'; // Transparent for No Risk
+                            break;
+                        case 'Low Risk':
+                            style.color = 'green'; // Low risk
+                            break;
+                        case 'Moderate Risk':
+                            style.color = 'yellow'; // Moderate risk
+                            break;
+                        case 'High Risk':
+                            style.color = 'orange'; // High risk
+                            break;
+                        case 'Severe/Critical Risk':
+                            style.color = 'red'; // Severe/Critical risk
+                            break;
+                        default:
+                            style.color = 'black'; // Default color if risk level is unrecognized
+                            break;
+                    }
+
+                    // Highlighting only the matched barangay with the appropriate style
+                    L.geoJSON(feature, {
+                        style: style
+                    }).addTo(map);
+                }
+
+                // Check for gray highlighting for specific municipalities
+                if (grayHighlightMunicipalities.includes(municipalityName)) {
+                    L.geoJSON(feature, {
+                        style: {
+                            color: 'gray', // Gray highlight color
+                            weight: 2,
+                            fillOpacity: 0 // No fill, only border
+                        }
+                    }).addTo(map);
+                }
+            });
+        }
+
+
+        // Call the function to check the table and toggle the map
+        checkTableAndToggleMap();
+
+
+        // Print Button Functionality
+        document.getElementById('print-button').addEventListener('click', function() {
+            const originalContent = document.body.innerHTML; // Store the original page content
+            const tableContent = document.querySelector('.table-container').innerHTML; // Get the table content
+
+            // Prepare the page content for printing
+            document.body.innerHTML = `
+                <html>
+                    <head>
+                        <title>Print Table</title>
+                        <style>
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin-top: 20px;
+                            }
+                            table, th, td {
+                                border: 1px solid black;
+                            }
+                            th, td {
+                                padding: 10px;
+                                text-align: left;
+                            }
+                            th {
+                                background-color: #f2f2f2;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        ${tableContent}
+                    </body>
+                </html>`;
+
+            // Print the table content
+            window.print();
+
+            // Restore the original page content after printing
+            document.body.innerHTML = originalContent;
+            window.location.reload(); // Reload to restore JavaScript functionality
+        });
+
+
+        document.querySelector('form').onsubmit = function(event) {
+            // Show the loading popup
+            const loadingPopup = document.getElementById('loading-popup');
+            loadingPopup.classList.remove('hidden');
+            
+            // Disable user actions and scrolling
+            document.body.classList.add('no-pointer-events');  // Disable all pointer events
+            document.body.style.overflow = 'hidden';           // Disable scrolling
+
+            // Assume form submission and back-end processing
+        };
+
+        window.onload = function() {
+            // Hide loading popup and check table population
+            const loadingPopup = document.getElementById('loading-popup');
+            const smsAlertPopup = document.getElementById('sms-alert-popup');
+            const smsAlertBtn = document.getElementById('send-sms-alert-btn');
+            const resultsTable = document.getElementById('results');
+            const rows = resultsTable.querySelector('tbody').getElementsByTagName('tr');
+            const countdownDisplay = document.getElementById('countdown');
+            let countdownTime = 10; // Countdown starting time in seconds
+
+            // Hide loading popup when the page finishes loading
+            loadingPopup.classList.add('hidden');
+            
+            // Check if the table has any populated rows
+            if (rows.length > 0) {
+                // If the table has data, show the SMS alert popup
+                smsAlertPopup.classList.remove('hidden');
+
+                // Enable pointer events for the SMS alert button
+                smsAlertBtn.classList.add('sms-active-btn');
+
+                // Disable all actions but enable only the SMS button
+                document.body.classList.add('no-pointer-events'); // Disable all pointer events
+                smsAlertBtn.style.pointerEvents = 'auto';         // Enable SMS button pointer events
+
+                // Start the countdown
+                const countdownInterval = setInterval(() => {
+                    countdownTime -= 1; // Decrease the countdown time by 1 second
+                    countdownDisplay.textContent = countdownTime; // Update the display
+
+                    // Check if the countdown has reached zero
+                    if (countdownTime <= 0) {
+                        clearInterval(countdownInterval); // Clear the interval
+                        smsAlertPopup.classList.add('hidden'); // Hide the popup
+                        // Re-enable interactions after the popup is closed
+                        document.body.classList.remove('no-pointer-events'); // Re-enable all actions
+                        document.body.style.overflow = '';  // Re-enable scrolling
+                    }
+                }, 1000); // 1000 milliseconds = 1 second
+
+            } else {
+                // Re-enable interactions and scrolling if no rows are found
+                document.body.classList.remove('no-pointer-events');
+                document.body.style.overflow = '';  // Re-enable scrolling
+            }
+        };
+
+
+        function checkForErrors() {
+            // You can implement error-checking logic here
+            return false; // Assuming no errors for now
+        }
+
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth() + 1; 
+        const currentYear = currentDate.getFullYear();
+
+        let nextMonth = currentMonth + 1;
+        let nextYear = currentYear;
+
+        if (nextMonth > 12) {
+            nextMonth = 1;
+            nextYear += 1;
+        }
+
+        const monthNames = ["January", "February", "March", "April", "May", "June", 
+                            "July", "August", "September", "October", "November", "December"];
+
+        // Prepare the range for the next month
+        const nextMonthName = monthNames[nextMonth - 1];
+        const nextMonthStartDate = new Date(nextYear, nextMonth - 1, 1);
+        const nextMonthEndDate = new Date(nextYear, nextMonth, 0); // Last day of next month
+
+        const tableRows = document.querySelectorAll("#results tbody tr");
+
+        let idCounter = 1;
+
+        tableRows.forEach(row => {
+            const monthYearCell = row.cells[1].innerText;
+            const dateParts = monthYearCell.split(" "); // Split "Month Day, Year" into components
+            const month = dateParts[0];
+            const day = parseInt(dateParts[1].replace(",", ""));
+            const year = parseInt(dateParts[2]);
+
+            const rowDate = new Date(year, monthNames.indexOf(month), day);
+
+            if (rowDate >= nextMonthStartDate && rowDate <= nextMonthEndDate) {
+                row.style.display = '';
+                row.querySelector('.row-id').innerText = idCounter;
+                idCounter++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        fetch('/contact_numbers')
+            .then(response => response.json())
+            .then(data => {
+                Object.keys(data).forEach(municipality => {
+                    const input = document.getElementById(`contact-${municipality.toLowerCase()}`);
+                    if (input) {
+                        input.value = data[municipality];
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching contact numbers:', error);
+            });
+
+            document.getElementById('save-btn').addEventListener('click', () => {
+            const contactNumbers = {
+                'famy': document.getElementById('contact-famy').value,
+                'kalayaan': document.getElementById('contact-kalayaan').value,
+                'mabitac': document.getElementById('contact-mabitac').value,
+                'paete': document.getElementById('contact-paete').value,
+                'pakil': document.getElementById('contact-pakil').value,
+                'pangil': document.getElementById('contact-pangil').value,
+                'santa-maria': document.getElementById('contact-santa-maria').value,
+                'siniloan': document.getElementById('contact-siniloan').value,
+            };
+
+            fetch('/update-contact-numbers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(contactNumbers)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('Contact numbers updated successfully');
+                    document.getElementById('save-btn').disabled = true;
+
+                    const inputs = document.querySelectorAll('input[type="text"]');
+                    inputs.forEach(input => input.disabled = true);
+                } else {
+                    alert('Failed to update contact numbers');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        document.getElementById('search').addEventListener('input', function() {
+            var query = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#results tbody tr');
+
+            rows.forEach(function(row) {
+                var cells = Array.from(row.getElementsByTagName('td')); // Fetch all cells in the row
+                var rowText = cells.map(cell => cell.textContent.toLowerCase()).join(' ');
+
+                // If search bar is empty, reset the display based on the next-month filter
+                if (query === "") {
+                    const monthYearCell = row.cells[1].innerText;
+                    const dateParts = monthYearCell.split(" ");
+                    const month = dateParts[0];
+                    const day = parseInt(dateParts[1].replace(",", ""));
+                    const year = parseInt(dateParts[2]);
+                    const rowDate = new Date(year, monthNames.indexOf(month), day);
+
+                    if (rowDate >= nextMonthStartDate && rowDate <= nextMonthEndDate) {
+                        row.style.display = ''; // Show rows for next month
+                    } else {
+                        row.style.display = 'none'; // Hide other rows
+                    }
+                } else {
+                    // Check if row contains the search query text
+                    if (rowText.indexOf(query) > -1) {
+                        row.style.display = ''; // Show row if match found
+                    } else {
+                        row.style.display = 'none'; // Hide row if no match
+                    }
+                }
+            });
+        });
+
+        function sendSMSAlert() {
+            const tableRows = document.querySelectorAll('#results tbody tr');
+            let municipalityData = {}; // Object to group barangays by municipality
+
+            // Iterate over each row in the results table to gather data
+            tableRows.forEach(row => {
+                // Only consider rows that are visible
+                if (row.style.display !== 'none') {
+                    const municipality = row.querySelector('td:nth-child(3)').innerText.toLowerCase(); // Get the municipality name
+                    const barangay = row.querySelector('td:nth-child(4)').innerText; // Get the barangay name
+                    const predictedCases = row.querySelector('td:nth-child(5)').innerText; // Get the predicted cases
+
+                    // Add barangay data to the corresponding municipality
+                    if (!municipalityData[municipality]) {
+                        municipalityData[municipality] = [];
+                    }
+                    municipalityData[municipality].push(`${barangay}: ${predictedCases}`);
+                }
+            });
+
+            // Object to hold messages for each unique number
+            let messages = {};
+
+            // Map municipality to contact input fields and prepare messages
+            for (const municipality in municipalityData) {
+                let contactNumber = '';
+                switch (municipality) {
+                    case 'famy':
+                        contactNumber = document.getElementById('contact-famy').value;
+                        break;
+                    case 'kalayaan':
+                        contactNumber = document.getElementById('contact-kalayaan').value;
+                        break;
+                    case 'mabitac':
+                        contactNumber = document.getElementById('contact-mabitac').value;
+                        break;
+                    case 'paete':
+                        contactNumber = document.getElementById('contact-paete').value;
+                        break;
+                    case 'pakil':
+                        contactNumber = document.getElementById('contact-pakil').value;
+                        break;
+                    case 'pangil':
+                        contactNumber = document.getElementById('contact-pangil').value;
+                        break;
+                    case 'santa maria':
+                        contactNumber = document.getElementById('contact-santa-maria').value;
+                        break;
+                    case 'siniloan':
+                        contactNumber = document.getElementById('contact-siniloan').value;
+                        break;
+                    default:
+                        contactNumber = ''; // Handle unknown municipality case
+                }
+
+                // Check if the contact number is available
+                if (contactNumber) {
+                    // Prepare the SMS message content with all barangays under the same municipality
+                    const barangayList = municipalityData[municipality].join(', ');
+                    messages[contactNumber] = `Alert: The predicted dengue cases in ${municipality.charAt(0).toUpperCase() + municipality.slice(1)} for next month are as follows: ${barangayList}`;
+                } else {
+                    console.log(`No contact number for ${municipality}, skipping...`);
+                }
+            }
+
+            // Send SMS messages if there are valid numbers
+            const validNumbers = Object.keys(messages);
+            if (validNumbers.length > 0) {
+                sendSMS(validNumbers, messages);
+            } else {
+                console.log("No valid numbers to send SMS.");
+            }
+        }
+
+        function sendSMS(contactNumbers, messages) {
+            const url = '/send-sms'; // Your backend route
+
+            contactNumbers.forEach(contactNumber => {
+                const data = {
+                    numbers: [contactNumber], // Send as an array with one number
+                    message: messages[contactNumber] // Use the corresponding message for the number
+                };
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log(`SMS sent:`, result);
+                    if (result.error) {
+                        console.error(`Error sending SMS:`, result.error);
+                    } else {
+                        // Close the existing message alert
+                        const messageAlert = document.getElementById('sms-alert-popup');
+                        if (messageAlert) {
+                            messageAlert.style.display = 'none'; // Hide the alert
+                        }
+                        // Show success message
+                        alert('SMS Alerts for the listed municipalities Sent Successfully!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch Error:', error);
+                });
+            });
+        }
+
+        // Trigger SMS alerts when the "Send SMS Alert" button is clicked
+        document.getElementById('send-sms-alert-btn').addEventListener('click', sendSMSAlert);
+
+
+        document.querySelectorAll('.file-upload-container input').forEach(input => {
+            input.addEventListener('change', function() {
+                const label = this.nextElementSibling;
+                label.textContent = this.files.length > 0 ? this.files[0].name : 'Upload Data';
+            });
+        });
+
+        document.getElementById('update-btn').addEventListener('click', function() {
+            const inputs = document.querySelectorAll('input[type="text"]');
+            inputs.forEach(input => input.disabled = false);
+
+            document.getElementById('save-btn').disabled = false;
+        });
+    </script>
+</body>
+</html>

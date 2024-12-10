@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container-header">
+            <div class="logo-text">
+                <a href="/admin" class="pho-link">
+                    <img src="{{ url_for('static', filename='img/PHO-logo.png') }}" alt="Provincial Health Office Logo" class="pho-logo">
+                    <div class="pho-label">
+                        <h2><a href="/admin">Provincial Health Office</a></h2>
+                        <h4><a href="/admin">Santa Cruz Laguna</a></h4>
+                    </div>
+                </a>
+            </div>
+            <div class="links">
+                <a href="/admin" class="pho-link {% if request.path == '/admin' %}current{% endif %}">Summary Report</a>
+                <a href="/repository" class="pho-link {% if request.path == '/repository' %}current{% endif %}">Repository</a>
+                <a href="{{ url_for('predict') }}" class="pho-link {% if request.path == url_for('predict') %}current{% endif %}">Predict</a>
+                <a href="/feedbacks" class="pho-link {% if request.path == '/feedbacks' %}current{% endif %}">Feedbacks</a>
+                <a href="/messages" class="pho-link {% if request.path == '/messages' %}current{% endif %}">Messages</a>
+                <a href="{{ url_for('logout') }}" class="logout-button {% if request.path == url_for('logout') %}current{% endif %}">Logout</a>
+            </div>
+        </div>
+    </header>
+</body>
+</html>

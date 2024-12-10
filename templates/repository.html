@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='repository.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>Repository</title>
+</head>
+{% include 'header.html' %}
+<body>
+
+    <div class="main-content">
+        <main>
+            <!-- Breadcrumb Navigation -->
+            <div class="breadcrumb">
+                <a href="#">Home</a> &gt; <span>Repository</span>
+            </div>
+
+            <!-- Container with fixed header and scrollable content -->
+            <div class="container">
+                <h1>File Uploads</h1>
+                
+                <!-- Scrollable content below the header -->
+                <div class="scrollable-content">
+                    <div class="folder-container">
+                        {% if folders %}
+                            {% for folder in folders %}
+                                <div class="folder">
+                                    <div class="folder-header" onclick="toggleFolder('{{ folder.name }}')">
+                                        <span class="folder-icon">&#128193;</span> <!-- Folder Icon -->
+                                        <h2 class="folder-name">{{ folder.name }}</h2>
+                                    </div>
+                                    <div class="file-list" id="folder-{{ folder.name }}">
+                                        <ul>
+                                            {% for file in folder.files %}
+                                                <li><a href="{{ file.url }}" download>
+                                                    <span class="file-icon">&#128196;</span> <!-- File Icon -->
+                                                    {{ file.name }}</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>No folders found.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        function toggleFolder(folderName) {
+            const folderElement = document.getElementById('folder-' + folderName);
+            if (folderElement.style.display === 'none' || folderElement.style.display === '') {
+                folderElement.style.display = 'block';
+            } else {
+                folderElement.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

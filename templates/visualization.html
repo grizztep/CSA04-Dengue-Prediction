@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="/static/visualization.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+    <div class="plot-container">
+        <div class="plot-section">
+            <div class="total-cases-year-container">
+                <div id="total-cases-container" class="total-cases-container">
+                    <h3>Total Dengue Cases </h3>
+                    <h4>(2019-2023)</h4>
+                    <p>{{ total_cases }}</p> 
+                </div>
+                <div id="year-distribution-plot" class="year-distribution-plot">
+                    {{ yearly_distribution_html | safe }}
+                </div>
+            </div>
+        </div>
+
+        <div class="plot-section">
+            <div id="mapid" class="map-container"></div>
+            <div class="legend-container">
+                <label class="legend-title">Cases per 10,000 population</label>
+                <div class="legend">
+                    <div class="color-box" style="background-color: blue;"></div>
+                    <span>0 - 100</span>
+                </div>
+                <div class="legend">
+                    <div class="color-box" style="background-color: green;"></div>
+                    <span>101 - 150</span>
+                </div>
+                <div class="legend">
+                    <div class="color-box" style="background-color: yellow;"></div>
+                    <span>151 - 200</span>
+                </div>
+                <div class="legend">
+                    <div class="color-box" style="background-color: orange;"></div>
+                    <span>201 - 250</span>
+                </div>
+                <div class="legend">
+                    <div class="color-box" style="background-color: red;"></div>
+                    <span>> 250</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="plot-section">
+            <div id="municipality-plot" class="municipality-plot">
+                {{ cases_per_municipality_html | safe }}
+            </div>
+        </div>
+        
+        <div class="plot-section">
+            <h2>Distribution of Dengue Cases by Barangay</h2>
+            <select id="municipality-select" onchange="updatePlot()" class="select-box">
+                <option value="" selected disabled>Select Municipality</option>
+                <option value="Famy">Famy</option>
+                <option value="Kalayaan">Kalayaan</option>
+                <option value="Mabitac">Mabitac</option>
+                <option value="Paete">Paete</option>
+                <option value="Pakil">Pakil</option>
+                <option value="Pangil">Pangil</option>
+                <option value="Santa Maria">Santa Maria</option>
+                <option value="Siniloan">Siniloan</option>
+            </select>
+            <div id="barangay-plots" class="barangay-plots">
+                {% for municipality, plot_html in plots.items() %}
+                    <div id="{{ municipality }}" class="barangay-plot" style="display: none;">
+                        {{ plot_html | safe }}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="screen-too-small">
+                Plot cannot be displayed, screen is too small.
+            </div>
+        </div>
+        
+        <div class="plot-section">
+            <div id="month-distribution-plot">
+                {{ month_distribution_html | safe }}
+            </div>
+        </div>
+
+        <div class="plot-section">
+            <div id="monthly-trend-plot">
+                {{ monthly_trend_html | safe }}
+            </div>
+        </div>
+
+        <div class="plot-section">
+            <div class="age-histogram-plot">
+                {{ age_histogram_html | safe }}
+            </div>
+        </div>
+
+        <div class="plot-section">
+            <div class="gender-bar-plot">
+                {{ gender_bar_html | safe }}
+            </div>
+        </div>
+    </div>
+    <script id="plots-data" type="application/json">{{ plots | tojson | safe }}</script>
+    <script id="cases-municipality-data" type="application/json">{{ cases_per_municipality_data | tojson | safe }}</script>
+
+    <script>
+        function updatePlot() {
+            var selectedMunicipality = document.getElementById("municipality-select").value;
+            var allPlots = JSON.parse(document.getElementById("plots-data").textContent);
+            
+            var allPlotDivs = document.querySelectorAll('.barangay-plot');
+            allPlotDivs.forEach(function(div) {
+                div.style.display = 'none';
+            });
+
+            var plotDivId = selectedMunicipality && allPlots[selectedMunicipality] ? selectedMunicipality : 'Famy';
+            var plotElement = document.getElementById(plotDivId);
+            if (plotElement) {
+                plotElement.style.display = 'block';
+            } else {
+                console.error("Element with ID '" + plotDivId + "' not found.");
+            }
+        }
+
+        window.onload = function() {
+            updatePlot(); // Assuming you have this function for other purposes
+            initMap(); // Ensure initMap function is defined if needed
+        };
+
+        var map;
+        var highlightedLayer;
+        var casesPerMunicipalityData = JSON.parse(document.getElementById("cases-municipality-data").textContent);
+        var municipalities = {
+            "Famy": [14.475869108370407, 121.4856023346167],
+            "Kalayaan": [14.340728677051292, 121.55676751306875],
+            "Mabitac": [14.4595888985302, 121.3877238592891],
+            "Paete": [14.388786178448663, 121.55749437914757],
+            "Pakil": [14.399821625432681, 121.52084724645835],
+            "Pangil": [14.419627955545232, 121.51348199674797],
+            "Santa Maria": [14.52285005940211, 121.4372925853042],
+            "Siniloan": [14.441613893205306, 121.4999233814948]
+        };
+
+        var highlightColor = "red"; // Set highlight color to red
+
+        function removeHighlight() {
+            if (highlightedLayer) {
+                map.removeLayer(highlightedLayer);
+                highlightedLayer = null;
+            }
+        }
+
+        function createMarker(municipality, coordinates, cases) {
+            var radius = Math.sqrt(cases) * 200;
+            var color = cases > 250 ? 'red' :
+                        cases > 200 ? 'orange' :
+                        cases > 150 ? 'yellow' :
+                        cases > 100  ? 'green' :
+                        'blue';
+
+            var circleMarker = L.circle(coordinates, {
+                color: color,
+                fillColor: color,
+                fillOpacity: 0.5,
+                radius: radius
+            }).addTo(map);
+
+            circleMarker.bindPopup("<b>" + municipality + "</b><br>Cases: " + cases);
+
+            circleMarker.on('click', function() {
+                highlightMunicipality(municipality);
+            });
+        }
+
+
+        function highlightMunicipality(municipality) {
+            console.log("Highlighting municipality:", municipality);
+            var highlightStyle = {
+                "color": highlightColor,
+                "weight": 3,
+                "opacity": 1,
+                "dashArray": "5 5"
+            };
+
+            fetch('{{ url_for("static", filename="maps_data.geojson") }}')
+                .then(response => response.json())
+                .then(data => {
+                    var selectedMunicipalities = data.features.filter(
+                        feature => feature.properties.NAME_2.toLowerCase() === municipality.toLowerCase()
+                    );
+
+                    if (selectedMunicipalities.length > 0) {
+                        var mergedGeoJSON = {
+                            "type": "FeatureCollection",
+                            "features": selectedMunicipalities
+                        };
+
+                        if (highlightedLayer) {
+                            map.removeLayer(highlightedLayer);
+                        }
+                        highlightedLayer = L.geoJSON(mergedGeoJSON, {
+                            style: highlightStyle
+                        }).addTo(map);
+
+                        highlightedLayer.on('click', function() {
+                            removeHighlight();
+                        });
+                    } else {
+                        console.error("Municipality not found in GeoJSON data:", municipality);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading GeoJSON:', error);
+                });
+        }
+
+        function initMap() {
+            map = L.map('mapid', {
+                zoomControl: false,
+                zoomSnap: 0
+            });
+
+            var districtBounds = [
+                [14.4, 121.3],
+                [14.5, 121.8]
+            ];
+
+            map.fitBounds(districtBounds);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 11,
+            }).addTo(map);
+
+            casesPerMunicipalityData.forEach(function(row) {
+                createMarker(row['Muncity'], municipalities[row['Muncity']], row['Cases']);
+            });
+
+            // Fix the highlight on page load
+            for (const [municipality, coordinates] of Object.entries(municipalities)) {
+                if (highlightColor) {
+                    createMarker(municipality, coordinates, casesPerMunicipalityData.find(row => row['Muncity'] === municipality)['Cases']);
+                }
+            }
+
+            map.dragging.disable();
+            map.touchZoom.disable();
+            map.doubleClickZoom.disable();
+            map.scrollWheelZoom.disable();
+            map.boxZoom.disable();
+            map.keyboard.disable();
+            map.zoomControl.remove();
+        }
+
+
+
+    </script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/3.1.0/leaflet.ajax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-omnivore/0.3.4/leaflet-omnivore.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='messages.css') }}">
+    <title>Messages</title>
+</head>
+{% include 'header.html' %}
+<body>
+    <div class="main-content">
+        <div class="message-container">
+            <table id="message-table">
+                <h1>Total Messages: {{ total_messages }}</h1> 
+                <input type="text" id="search-bar" placeholder="Search">
+                <thead>
+                    <tr>
+                        <th>Date and Time</th>
+                        <th>Fullname</th>
+                        <th>Email</th>
+                        <th>Contact Number</th>
+                        <th>Message</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in messages %}
+                    <tr data-id="{{ message.id }}">
+                        <td>{{ message.date_and_time }}</td>
+                        <td>{{ message.fullname }}</td>
+                        <td>{{ message.email }}</td>
+                        <td>{{ message.contact_number }}</td>
+                        <td>{{ message.message }}</td>
+                        <td>{{ message.action }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="reply-section">
+                <button id="reply-button" disabled>Reply</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedRow = null;
+
+        document.querySelectorAll('#message-table tbody tr').forEach(row => {
+            row.addEventListener('click', function() {
+                // If the same row is clicked again, unselect it
+                if (selectedRow === this) {
+                    this.style.backgroundColor = '';  // Remove background color
+                    selectedRow = null;               // Clear the selection
+                    document.getElementById('reply-button').disabled = true; // Disable the button
+                } else {
+                    // Clear the previous selected row's background color
+                    if (selectedRow) {
+                        selectedRow.style.backgroundColor = '';
+                    }
+
+                    // Highlight the newly selected row
+                    selectedRow = this;
+                    selectedRow.style.backgroundColor = '#c8e6c9'; // Optional, visual feedback
+
+                    // Enable the reply button
+                    document.getElementById('reply-button').disabled = false;
+                }
+            });
+        });
+
+        // Handle Reply button click
+        document.getElementById('reply-button').addEventListener('click', function() {
+            if (!selectedRow) return;
+
+            const email = selectedRow.querySelector('td:nth-child(3)').textContent; // Email is in the 3rd cell
+            const messageId = selectedRow.getAttribute('data-id'); // Get document ID from data-id
+            const subject = encodeURIComponent("Regarding Your Message");
+            const body = encodeURIComponent(
+                "Dear User,\n\nThank you for your Message. We will get back to you shortly.\n\nBest regards,\nPHO\n"
+            );
+
+            // Open Gmail compose window
+            const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`;
+            window.open(gmailComposeUrl, '_blank');
+
+            // Update the 'Action' field in Firestore
+            fetch('/message_update_action', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: messageId, // Pass the document ID
+                    action: 'Replied'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    console.log(data.message); // Show a success message
+                } else {
+                    alert("Error updating action: " + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+            // Update the action column in the selected row
+            selectedRow.querySelector('td:last-child').textContent = 'Replied';
+
+            // Optionally disable the button after the reply
+            document.getElementById('reply-button').disabled = true;
+        });
+    
+        document.getElementById('search-bar').addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#message-table tbody tr');
+            
+            rows.forEach(row => {
+                const cells = row.getElementsByTagName('td');
+                let match = false;
+
+                // Loop through all columns including the "Actions" column
+                for (let i = 0; i < cells.length; i++) { 
+                    if (cells[i].textContent.toLowerCase().includes(searchValue)) {
+                        match = true;
+                        break;
+                    }
+                }
+                row.style.display = match ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

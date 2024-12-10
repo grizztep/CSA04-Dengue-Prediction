@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Provincial Laguna Reset Password</title>
+    <link rel="stylesheet" href="/static/form.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .success-message {
+            color: green;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+    </style>
+<header>
+    <div class="main-content">
+        <div class="login-container">
+            <a href="/" class="pho-link">
+                <img src="{{ url_for('static', filename='img/PHO-logo.png') }}" alt="Provincial Health Office Logo" class="pho-logo">
+                <div class="pho-label-login">
+                    <h2><a href="/">Provincial Health Office</a></h2>
+                    <h4><a href="/">Santa Cruz Laguna</a></h4>
+                </div>
+            </a>
+            <main>
+                <h2>Change Password</h2>
+                {% if error %}
+                    <div class="error-message">{{ error }}</div>
+                {% elif success %}
+                    <div class="success-message">{{ success }}</div>
+                    <div class="popup" id="success-popup">
+                        <h3>Password Reset Successful</h3>
+                        <p>Your password has been successfully reset.</p>
+                        <button onclick="closePopup()">Close</button>
+                    </div>
+                    <script>
+                        // Show popup if success message is present
+                        document.getElementById('success-popup').style.display = 'block';
+                        function closePopup() {
+                            window.location.href = "/login"; // Redirect to login.html
+                        }
+                    </script>
+                {% endif %}
+                <form action="/resetpass" method="post">
+                    <div class="form-group">
+                        <input type="password" id="password" name="password" placeholder="New Password" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-Enter Password" required>
+                    </div>
+                    <a class="show-password" id="togglePassword">Show Passwords</a>
+                    <button type="submit">Reset Password</button>
+                </form>
+                <p>
+                    <a href="/verify_otp">Back</a>
+                </p>
+            </main>
+        </div>
+    </div>
+</header>
+    <script>
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const confirmpasswordInput = document.getElementById('confirm_password');
+
+        togglePassword.addEventListener('click', function() {
+            // Toggle the type attribute for both password fields
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            confirmpasswordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? 'Show Passwords' : 'Hide Passwords';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provincial Health Office</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="/static/home.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container-header">
+            <div class="navigation">
+                <div class="logo-text" id="logo-container">
+                    <img src="{{ url_for('static', filename='img/PHO-logo.png') }}" alt="Provincial Health Office Logo" class="pho-logo">
+                    <div class="pho-label">
+                        <h2>Provincial Health Office</h2>
+                        <h4>Santa Cruz Laguna</h4>
+                    </div>
+                </div>
+                <div class="menu">
+                <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+                    <ul>
+                        <li><a href="#statistics">Statistics</a></li>
+                        <li><a href="#dengue-info">Dengue Information</a></li>
+                        <li><a href="#feedback">Feedback</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="title-container">
+        <div class="title-background">
+            <h1>Dengue Prevention</h1>
+            <h3>4th District of Laguna</h3>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+        <div class="sidebar-menu">
+            <ul>
+                <li><a href="#statistics">Statistics</a></li>
+                <li><a href="#dengue-info">Dengue Information</a></li>
+                <li><a href="#feedback">Feedback</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <main>
+        <div id="statistics" class="container">
+            <section>
+                {% include 'visualization.html' %}
+            </section>
+        </div>
+
+        <div id="dengue-info" class="container">
+            <section>
+                <div class="info">
+                    <h3>Overview</h3>
+                    <p>
+                        Dengue (break-bone fever) is a viral infection that spreads from mosquitoes to people. It is more common in tropical and subtropical climates. Most people who get dengue will not have symptoms. But for those who do, the most common symptoms are high fever, headache, body aches, nausea, and rash. Most will get better in 1–2 weeks. Some people develop severe dengue and need care in a hospital. In severe cases, dengue can be fatal. You can lower your risk of dengue by avoiding mosquito bites, especially during the day. Dengue is treated with pain medicine as there is no specific treatment currently.
+                    </p>
+
+                    <div class="symptoms-container">
+                        <div class="symptoms-text">
+                            <h3>Symptoms</h3>
+                            <p>
+                                Most people with dengue have mild or no symptoms and will get better in 1–2 weeks. Rarely, dengue can be severe and lead to death. If symptoms occur, they usually begin 4–10 days after infection and last for 2–7 days. Symptoms may include:
+                            </p>
+                            <ul>
+                                <li>High fever (40°C/104°F)</li>
+                                <li>Severe headache</li>
+                                <li>Pain behind the eyes</li>
+                                <li>Muscle and joint pains</li>
+                                <li>Nausea</li>
+                                <li>Vomiting</li>
+                                <li>Swollen glands</li>
+                                <li>Rash</li>
+                            </ul>
+                        </div>
+                        <div class="symptoms-image">
+                            <img src="../static/img/symptoms.jpg" alt="Dengue Symptoms">
+                        </div>
+                    </div>
+
+                    <p>
+                        Individuals who are infected for the second time are at greater risk of severe dengue.
+                    </p>
+                    <h3>Severe Dengue Symptoms</h3>
+                    <p>Severe dengue symptoms often come after the fever has gone away and may include:</p>
+                    <ul>
+                        <li>Severe abdominal pain</li>
+                        <li>Persistent vomiting</li>
+                        <li>Rapid breathing</li>
+                        <li>Bleeding gums or nose</li>
+                        <li>Fatigue</li>
+                        <li>Restlessness</li>
+                        <li>Blood in vomit or stool</li>
+                        <li>Being very thirsty</li>
+                        <li>Pale and cold skin</li>
+                        <li>Feeling weak</li>
+                    </ul>
+                    <p>People with these severe symptoms should get care right away. After recovery, people who have had dengue may feel tired for several weeks.</p>
+        
+                    <h3>Diagnostics and Treatment</h3>
+                    <p>
+                        There is no specific treatment for dengue. The focus is on treating pain symptoms. Most cases of dengue fever can be treated at home with pain medicine. Acetaminophen (paracetamol) is often used to control pain. Non-steroidal anti-inflammatory drugs like ibuprofen and aspirin are avoided as they can increase the risk of bleeding. For people with severe dengue, hospitalization is often needed.
+                    </p>
+
+                    <img src="../static/img/dengue-transmission.jpg" alt="Mosquito Bite" class="transmission-image">
+                    <h3>Transmission</h3>
+                    <h5>Through Mosquito Bite</h5>
+                    <p>
+                        The dengue virus is transmitted to humans through the bites of infected female mosquitoes, primarily the Aedes aegypti mosquito. Other species within the Aedes genus can also act as vectors, but their contribution is normally secondary to Aedes aegypti. Once infectious, the mosquito can transmit the virus for the rest of its life.
+                    </p>
+        
+                    <h5>Human-to-Mosquito Transmission</h5>
+                    <p>
+                        Mosquitoes can become infected by people who are viremic with the dengue virus. Human-to-mosquito transmission can occur up to 2 days before someone shows symptoms of the illness, and up to 2 days after the fever has resolved.
+                    </p>
+        
+                    <h5>Maternal Transmission</h5>
+                    <p>
+                        The primary mode of transmission of the dengue virus between humans involves mosquito vectors. There is evidence of the possibility of maternal transmission (from a pregnant mother to her baby).
+                    </p>
+        
+                    <h5>Other Transmission Modes</h5>
+                    <p>
+                        Rare cases of transmission via blood products, organ donation, and transfusions have been recorded. Similarly, transovarial transmission of the virus within mosquitoes has also been recorded.
+                    </p>
+        
+                    <h3>Risk Factors</h3>
+                    <p>
+                        Previous infection with DENV increases the risk of the individual developing severe dengue. Urbanization, especially unplanned, is associated with dengue transmission through multiple social and environmental factors: population density, human mobility, access to reliable water sources, and water storage practices.
+                    </p>
+                    <p>
+                        Community risks to dengue also depend on a population’s knowledge, attitude, and practice towards dengue, as the exposure is closely related to behaviors such as water storage, plant keeping, and self-protection against mosquito bites.
+                    </p>
+        
+                    <div class="prevention-container">
+                        <div class="prevention-image">
+                            <img src="../static/img/prevention.jpg" alt="Mosquito Bite">
+                        </div>
+                        <div class="prevention-text">
+                            <h3>Prevention and Control</h3>
+                            <p>
+                                The mosquitoes that spread dengue are active during the day. Lower the risk of getting dengue by protecting yourself from mosquito bites by using:
+                            </p>
+                            <ul>
+                                <li>Clothes that cover as much of your body as possible</li>
+                                <li>Mosquito nets if sleeping during the day, ideally nets sprayed with insect repellent</li>
+                                <li>Window screens</li>
+                                <li>Mosquito repellents (containing DEET, Picaridin, or IR3535)</li>
+                                <li>Coils and vaporizers</li>
+                            </ul>
+                            <p>
+                                Mosquito breeding can be prevented by:
+                            </p>
+                            <ul>
+                                <li>Preventing mosquitoes from accessing egg-laying habitats by environmental management and modification</li>
+                                <li>Disposing of solid waste properly and removing artificial man-made habitats that can hold water</li>
+                                <li>Covering, emptying, and cleaning domestic water storage containers on a weekly basis</li>
+                                <li>Applying appropriate insecticides to outdoor water storage containers</li>
+                            </ul>
+                            <p>
+                                If you get dengue, it’s important to:
+                            </p>
+                            <ul>
+                                <li>Rest</li>
+                                <li>Drink plenty of liquids</li>
+                                <li>Use acetaminophen (paracetamol) for pain</li>
+                                <li>Avoid non-steroidal anti-inflammatory drugs, like ibuprofen and aspirin</li>
+                                <li>Watch for severe symptoms and contact your doctor as soon as possible if you notice any</li>
+                            </ul>
+                            <p>
+                                So far, one vaccine (QDenga) has been approved and licensed in some countries. However, it is recommended only for the age group of 6 to 16 years in high transmission settings. Several additional vaccines are under evaluation.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h3>References</h3>
+                    <ol>
+                        <li>Bhatt, S., et al., The global distribution and burden of dengue. Nature, 2013. 496(7446): p. 504–507.</li>
+                        <li>Brady, O.J., et al., Refining the global spatial limits of dengue virus transmission by evidence-based consensus. PLOS Neglected Tropical Diseases, 2012. 6(8): p. e1760.</li>
+                        <li>Waggoner, J.J., et al., Viremia and Clinical Presentation in Nicaraguan Patients Infected With Zika Virus, Chikungunya Virus, and Dengue Virus. Clinical Infectious Diseases, 2016. 63(12): p. 1584-1590.</li>
+                    </ol>
+                </div>
+            </section>
+        </div>
+
+        <div id="feedback" class="container">
+            <section>
+                <h2>Send Feedback</h2>
+                <p>Your feedback is important to us. Please fill out the form below:</p>
+
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        <ul class="flashes">
+                            {% for category, message in messages %}
+                                <li class="{{ category }}">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+        
+                <form id="feedback-form" method="POST" action="/submit_feedback">
+                    <label for="fullname"></label>
+                    <input type="text" id="fullname" name="fullname" placeholder="Full Name" required autocomplete="name">
+        
+                    <label for="email"></label>
+                    <input type="email" id="email" name="email" placeholder="Email" required autocomplete="email">
+        
+                    <label for="feedback">Your Feedback:</label>
+                    <textarea id="feedback" name="feedback" rows="5" placeholder="Type your feedback here..." required></textarea>
+        
+                    <button type="submit">Send Feedback</button>
+                </form>
+            </section>
+        </div>
+
+        <div id="about" class="container">
+            <section>
+                <h2>Project Overview</h2>
+            <p>
+                Greetings and welcome to the Dengue Prediction System designed for the Laguna Provincial Health Office. 
+                This platform uses cutting-edge machine learning algorithms to forecast possible dengue outbreaks 
+                and offer insightful data on dengue case patterns.
+            </p>
+            <p>
+                To predict future dengue outbreaks, our method combines multiple information, such as temperature, humidity,
+                mosquito populations, and past dengue cases. This aids in prompt and efficient reaction tactics to stop the spread of dengue.
+            </p>
+
+            <div id="municipalities" class="container">
+                <h2>4th District of Laguna (BAYBAY)</h2>
+                <div class="municipalities-grid">
+                    <div class="municipality">
+                        <img src="{{ url_for('static', filename='img/famy.jpg') }}" alt="Famy">
+                        <a href="https://www.philatlas.com/luzon/r04a/laguna/famy.html" target="_blank">Famy</a>
+                    </div>
+                    <div class="municipality">
+                        <img src="{{ url_for('static', filename='img/kalayaan.jpg') }}" alt="Kalayaan">
+                        <a href="https://www.philatlas.com/luzon/r04a/laguna/kalayaan.html" target="_blank">Kalayaan</a>
+                    </div>
+                    <div class="municipality">
+                        <img src="{{ url_for('static', filename='img/mabitac.jpg') }}" alt="Mabitac">
+                        <a href="https://www.philatlas.com/luzon/r04a/laguna/mabitac.html" target="_blank">Mabitac</a>
+                    </div>
+                    <div class="municipality">
+                        <img src="{{ url_for('static', filename='img/paete.jpg') }}" alt="Paete">
+                        <a href="https://www.philatlas.com/luzon/r04a/laguna/paete.html" target="_blank">Paete</a>
+                    </div>
+                    <div class="municipality">
+                        <img src="{{ url_for('static', filename='img/pakil.jpg') }}" alt="Pakil">
+                        <a href="https://www.philatlas.com/luzon/r04a/laguna/pakil.html" target="_blank">Pakil</a>
+                    </div>
+                    <div class="municipality">
+                        <img src="{{ url_for('static', filename='img/pangil.jpg') }}" alt="Pangil">
+                        <a href="https://www.philatlas.com/luzon/r04a/laguna/pangil.html" target="_blank">Pangil</a>
+                    </div>
+                    <div class="municipality">
+                        <img src="{{ url_for('static', filename='img/santa_maria.jpg') }}" alt="Santa Maria">
+                        <a href="https://www.philatlas.com/luzon/r04a/laguna/santa-maria.html" target="_blank">Santa Maria</a>
+                    </div>
+                    <div class="municipality">
+                        <img src="{{ url_for('static', filename='img/siniloan.jpg') }}" alt="Siniloan">
+                        <a href="https://www.philatlas.com/luzon/r04a/laguna/siniloan.html" target="_blank">Siniloan</a>
+                    </div>
+                </div>
+                <p>
+                    The scope of this prediction system focuses exclusively on the 4th District of Laguna, specifically targeting the selected municipalities known as BAYBAY. 
+                    These municipalities include Famy, Kalayaan, Mabitac, Paete, Pakil, Pangil, Santa Maria, and Siniloan. 
+                    By concentrating on these areas, the system provides precise and actionable insights to help mitigate the impact of dengue in these key locations.
+                </p>
+            </div>
+            </section>
+        </div>
+
+        <div id="contact" class="container">
+            <section>
+                <h2>Contact Us</h2>
+                <p>If you have any questions or need further assistance, please contact us at:</p>
+                <p>Email: <a href="mailto:lagunapesu.cbds@gmail.com">lagunapesu.cbds@gmail.com</a></p>
+        
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        <ul class="flashes">
+                            {% for category, message in messages %}
+                                <li class="{{ category }}">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+        
+                <!-- Contact Form -->
+                <form id="contact-form" method="POST" action="/submit_message">
+                    <label for="fullname"></label>
+                    <input type="text" id="fullname" name="fullname" placeholder="Full Name" required>
+        
+                    <label for="contact-number"></label>
+                    <input type="tel" id="contact-number" name="contactnumber" placeholder="Contact Number" required>
+        
+                    <label for="email"></label>
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+        
+                    <label for="message"></label>
+                    <textarea id="message" name="message" rows="5" placeholder="Type your message here..." required></textarea>
+        
+                    <button type="submit">Send</button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container-footer">
+            <p>&copy; 2024 Provincial Health Office Laguna. All rights reserved.</p>
+        </div>
+    </footer>   
+                
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashes = document.querySelectorAll('.flashes li');
+            flashes.forEach(flash => {
+                alert(flash.textContent); // Display each flash message in an alert
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var menuToggle = document.querySelectorAll('.menu-toggle');
+            var sidebar = document.querySelector('.sidebar');
+            var sidebarMenu = document.querySelector('.sidebar-menu');
+
+            // Toggle sidebar visibility on menu icon click
+            menuToggle.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+            });
+
+            // Handle smooth scroll to top functionality
+            var scrollToTopBtn = document.getElementById('scrollToTopBtn');
+            var isScrolling = false;
+
+            window.addEventListener('scroll', function() {
+                if (!isScrolling && window.scrollY > 300) {
+                    scrollToTopBtn.style.display = 'block';
+                } else {
+                    scrollToTopBtn.style.display = 'none';
+                }
+            });
+
+            scrollToTopBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                if (!isScrolling) {
+                    isScrolling = true;
+                    var currentPosition = window.pageYOffset || document.documentElement.scrollTop;
+                    var scrollStep = currentPosition / 15;
+
+                    function scrollAnimation() {
+                        currentPosition -= scrollStep;
+                        if (currentPosition > 0) {
+                            window.scrollTo(0, currentPosition);
+                            requestAnimationFrame(scrollAnimation);
+                        } else {
+                            window.scrollTo(0, 0);
+                            isScrolling = false;
+                        }
+                    }
+
+                    scrollAnimation();
+                }
+            });
+
+            // Smooth scroll for menu links
+            document.querySelectorAll('.menu a').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var targetSection = this.getAttribute('href');
+                    if (targetSection.startsWith('#')) {
+                        var targetElement = document.querySelector(targetSection);
+                        if (targetElement) {
+                            var offsetTop = targetElement.offsetTop;
+                            window.scrollTo({
+                                top: offsetTop,
+                                behavior: 'smooth'
+                            });
+                        }
+                    } else {
+                        window.location.href = targetSection;
+                    }
+                    document.querySelector('.menu').classList.remove('active');
+                });
+            });
+
+            // Reload page on logo click
+            document.getElementById('logo-container').addEventListener('click', function() {
+                location.reload();
+            });
+        });
+    </script>
+</body>
+<button id="scrollToTopBtn" class="scroll-to-top-btn" title="Go to top"><i class="fa-solid fa-arrow-up"></i></button>
+</html>
